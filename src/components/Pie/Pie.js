@@ -57,7 +57,6 @@ class Pie extends React.Component {
   };
 
   update = (data) => {
-
     let pie = d3
       .pie()
       .value(function (d) {
