@@ -37,37 +37,37 @@ class Pie extends React.Component {
         "translate(" + this.width / 2 + "," + this.height / 2 + ")"
       );
 
+    
+    let defs = this.svg.append('svg:defs');
+    defs.append("svg:pattern")
+    .attr("id", "pie_pattern")
+    .attr("width", 500)
+    .attr("height", 500)
+    .attr("patternUnits", "userSpaceOnUse")
+    .attr("x", -250)
+    .attr("y", -250)
+    .append("svg:image")
+    .attr("xlink:href", './pattern.png')
+    .attr("width", 500)
+    .attr("height", 500)
+    .attr("x", 0)
+    .attr("y", 0);
+
     this.update(this.props.pieData);
   };
 
   update = (data) => {
 
-    let defs = this.svg.append('svg:defs');
-    defs.append("svg:pattern")
-    .attr("id", "grump_avatar")
-    .attr("width", 208)
-    .attr("height", 582)
-    .attr("patternUnits", "userSpaceOnUse")
-    .append("svg:image")
-    .attr("xlink:href", './pattern.png')
-    .attr("width", 208)
-    .attr("height", 582)
-    .attr("x", 0)
-    .attr("y", 0);
-
-   
-
-    var pie = d3
+    let pie = d3
       .pie()
       .value(function (d) {
         return d.value;
       })
       .sort(null);
 
-    var data_ready = pie(data);
-    var u = this.svg.selectAll("path").data(data_ready);
+    let data_ready = pie(data);
+    let u = this.svg.selectAll("path").data(data_ready);
 
-    let self = this
     u.enter()
       .append("path")
       .on("click", function(d,self) {
@@ -78,10 +78,7 @@ class Pie extends React.Component {
       .transition()
       .duration(1000)
       .attr("d", d3.arc().innerRadius(0).outerRadius(this.radius))
-      // .attr("fill", function (d) {
-      //   return "blue"; //this.color(d.data.key);
-      // })
-      .style("fill", "url(#grump_avatar)")
+      .style("fill", "url(#pie_pattern)")
       .attr("stroke", "white")
       .style("stroke-width", "2px")
       .style("opacity", 1)
