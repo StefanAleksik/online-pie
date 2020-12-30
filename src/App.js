@@ -6,20 +6,26 @@ import { BrowserRouter, Route, Switch } from "react-router-dom";
 class App extends React.Component {
   state = {
     pieData: [],
+    user:[]
   };
 
-  addParticipant = (participant) => {
+  addSlice = (slice) => {
     let pieData = [...this.state.pieData];
-    pieData.push({...participant})
-    console.log(pieData)
+    pieData.push({...slice})
     this.setState({pieData})
+  }
+
+  addUser = (userData) => {
+    let user = [...this.state.user];
+    user.push({...userData})
+    this.setState({user})
   }
 
   render() {
     return (  
         <BrowserRouter>
           <Switch>
-            <Route exact path='/' render={(props) => <Godfather {...props} pieData={this.state.pieData} addParticipant={this.addParticipant} />} /> 
+            <Route exact path='/' render={(props) => <Godfather {...props} pieData={this.state.pieData} userData={this.state.user} addUser={this.addUser} addSlice={this.addSlice} />} /> 
             <Route path='/pie' render={(props) => <Pie {...props} pieData={this.state.pieData} />} /> 
           </Switch>
         </BrowserRouter>
@@ -28,15 +34,3 @@ class App extends React.Component {
 }
 
 export default App;
-
-
-{/* <div className="row">
-          <div className="col-sm-4">
-            <Godfather pieData={this.state.pieData} addParticipant={this.addParticipant} />
-          </div>
-          <div className="col-sm-6">
-            Пита
-            <Pie pieData={this.state.pieData} />
-          </div>
-          <div className="col-sm-2">2</div>
-        </div> */}
