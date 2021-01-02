@@ -12,10 +12,10 @@ class PieContainer extends React.Component {
   pieChartRef;
 
   svg = null;
-  width = isMobile ? 350 :500;
-  height = isMobile ? 350 :500;
+  width = isMobile ? 300 :500;
+  height = isMobile ? 300 :500;
 
-  gposition = isMobile ? -175 : -250;
+  gposition = isMobile ? -150 : -250;
 
   radius = Math.min(this.width, this.height) / 2;
 
