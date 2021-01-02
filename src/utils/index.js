@@ -1,0 +1,1 @@
+export {getRndInteger} from './random'

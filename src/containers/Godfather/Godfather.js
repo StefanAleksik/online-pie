@@ -2,22 +2,25 @@ import React from "react";
 import nextId from "react-id-generator";
 
 import { connect } from "react-redux";
-import { addParticipant, addSlice } from "../../redux/actions";
+import { addParticipant, addSlice, addCoin } from "../../redux/actions";
 import { getParticipants, getSlices } from '../../redux/selectors'
 
-class Godfather extends React.Component {
+import { getRndInteger } from '../../utils'
+
+class GodfatherContainer extends React.Component {
   handleSubmit = (ev) => {
     ev.preventDefault();
     let id = nextId();
     //redux stuff
     this.props.addParticipant({ name: this.input.value, pie: null });
     this.props.addSlice({ value: 1, coin: false, id });
-
     this.input.value = "";
   };
 
   goToPie = (ev) => {
     ev.preventDefault();
+    const coin = getRndInteger(0, this.props.participants.length)
+    this.props.addCoin(coin);
     this.props.history.push("/pie");
   };
 
@@ -53,7 +56,7 @@ class Godfather extends React.Component {
         </ul>
         <div className="card-body">
           <button
-            disabled={this.props.slices.length == 0}
+            disabled={this.props.slices.length === 0}
             onClick={this.goToPie}
             type="button"
             className="btn btn-primary btn-lg btn-block"
@@ -72,4 +75,4 @@ const mapStateToProps = state => {
   return { participants, slices }
 }
 
-export default connect(mapStateToProps, { addParticipant, addSlice })(Godfather);
+export const Godfather = connect(mapStateToProps, { addParticipant, addSlice, addCoin })(GodfatherContainer);

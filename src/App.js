@@ -1,7 +1,6 @@
 import React from "react";
 import "./App.css";
-import Pie from "./components/Pie/Pie";
-import Godfather from "./components/Godfather/Godfather";
+import { Godfather, Pie } from "./containers";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 class App extends React.Component {
   render() {

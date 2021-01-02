@@ -4,7 +4,7 @@ import * as d3 from "d3";
 import { connect } from "react-redux";
 import { getSlices } from "../../redux/selectors";
 
-class Pie extends React.Component {
+class PieContainer extends React.Component {
   pieChartRef;
 
   svg = null;
@@ -97,18 +97,20 @@ class Pie extends React.Component {
           .duration(1000)
           .attr("fill-opacity", 0);
 
-        let coinPosition = d3
-          .arc()
-          .outerRadius(this.radius - 30)
-          .innerRadius(this.radius - 30);
+        if (data.data.coin) {
+          let coinPosition = d3
+            .arc()
+            .outerRadius(this.radius - 30)
+            .innerRadius(this.radius - 30);
 
-        d3.select("g#g_" + data.data.id)
-          .append("circle")
-          .attr("transform", function (d) {
-            return "translate(" + coinPosition.centroid(d) + ")";
-          })
-          .style("fill", "url(#coin_pattern)")
-          .attr("r", "20");
+          d3.select("g#g_" + data.data.id)
+            .append("circle")
+            .attr("transform", function (d) {
+              return "translate(" + coinPosition.centroid(d) + ")";
+            })
+            .style("fill", "url(#coin_pattern)")
+            .attr("r", "20");
+        }
       })
       .attr("id", (d) => "path_" + d.data.id)
       .merge(u)
@@ -129,4 +131,4 @@ const mapStateToProps = (state) => {
   return { slices };
 };
 
-export default connect(mapStateToProps)(Pie);
+export const Pie = connect(mapStateToProps)(PieContainer);
