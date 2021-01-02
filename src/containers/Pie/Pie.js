@@ -1,6 +1,6 @@
 import React from "react";
 import * as d3 from "d3";
-import { isMobile} from "react-device-detect";
+import { isMobileOnly} from "react-device-detect";
 
 import { connect } from "react-redux";
 import { incrementOrder } from "../../redux/actions";
@@ -12,12 +12,11 @@ class PieContainer extends React.Component {
   pieChartRef;
 
   svg = null;
-  width = isMobile ? 300 :500;
-  height = isMobile ? 300 :500;
+  pieSide = isMobileOnly ? 300 :500;
+  radius = this.pieSide / 2;
+  gposition = this.radius * -1;
 
-  gposition = isMobile ? -150 : -250;
-
-  radius = Math.min(this.width, this.height) / 2;
+  
 
   componentDidMount() {
     this.renderSvg();
@@ -31,8 +30,7 @@ class PieContainer extends React.Component {
           ref={(el) => (this.pieChartRef = el)}
         ></div>
         <div className="card-footer bg-transparent">
-          {" "}
-          <Ceremony />{" "}
+          <Ceremony />
         </div>
       </div>
     );
@@ -42,28 +40,28 @@ class PieContainer extends React.Component {
     this.svg = d3
       .select(this.pieChartRef)
       .append("svg")
-      .attr("width", this.width)
-      .attr("height", this.height)
+      .attr("width", this.pieSide)
+      .attr("height", this.pieSide)
       .attr("class", "mx-auto d-block")
       .append("g")
       .attr(
         "transform",
-        "translate(" + this.width / 2 + "," + this.height / 2 + ")"
+        "translate(" + this.pieSide / 2 + "," + this.pieSide / 2 + ")"
       );
 
     let defs_pie = this.svg.append("svg:defs");
     defs_pie
       .append("svg:pattern")
       .attr("id", "pie_pattern")
-      .attr("width", this.width)
-      .attr("height", this.height)
+      .attr("width", this.pieSide)
+      .attr("height", this.pieSide)
       .attr("patternUnits", "userSpaceOnUse")
       .attr("x", this.gposition)
       .attr("y", this.gposition)
       .append("svg:image")
       .attr("xlink:href", "./pattern.png")
-      .attr("width", this.width)
-      .attr("height", this.height)
+      .attr("width", this.pieSide)
+      .attr("height", this.pieSide)
       .attr("x", 0)
       .attr("y", 0);
 
@@ -74,8 +72,8 @@ class PieContainer extends React.Component {
       .attr("width", 40)
       .attr("height", 40)
       .attr("patternUnits", "userSpaceOnUse")
-      .attr("x", this.gposition + 30)
-      .attr("y", this.gposition + 30)
+      .attr("x", -220)
+      .attr("y", -220)
       .append("svg:image")
       .attr("xlink:href", "./coinpattern.png")
       .attr("width", 40)
