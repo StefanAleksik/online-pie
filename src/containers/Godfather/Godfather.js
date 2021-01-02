@@ -26,7 +26,7 @@ class GodfatherContainer extends React.Component {
 
   render() {
     return (
-      <div className="card col-sm-7 m-auto">
+      <div className="card col-sm-6 m-auto">
         <div className="card-body">
           <h5 className="card-title mx-auto">Додади учесници</h5>
           <form onSubmit={this.handleSubmit} className="form-group">

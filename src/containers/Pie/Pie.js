@@ -1,5 +1,6 @@
 import React from "react";
 import * as d3 from "d3";
+import { isMobile} from "react-device-detect";
 
 import { connect } from "react-redux";
 import { incrementOrder } from "../../redux/actions";
@@ -11,8 +12,11 @@ class PieContainer extends React.Component {
   pieChartRef;
 
   svg = null;
-  width = 500;
-  height = 500;
+  width = isMobile ? 350 :500;
+  height = isMobile ? 350 :500;
+
+  gposition = isMobile ? -175 : -250;
+
   radius = Math.min(this.width, this.height) / 2;
 
   componentDidMount() {
@@ -21,7 +25,7 @@ class PieContainer extends React.Component {
 
   render() {
     return (
-      <div className="card col-sm-7 m-auto p-0">
+      <div className="card col-sm-8 m-auto p-0">
         <div
           className="card-img-top p-5 woodPattern"
           ref={(el) => (this.pieChartRef = el)}
@@ -51,15 +55,15 @@ class PieContainer extends React.Component {
     defs_pie
       .append("svg:pattern")
       .attr("id", "pie_pattern")
-      .attr("width", 500)
-      .attr("height", 500)
+      .attr("width", this.width)
+      .attr("height", this.height)
       .attr("patternUnits", "userSpaceOnUse")
-      .attr("x", -250)
-      .attr("y", -250)
+      .attr("x", this.gposition)
+      .attr("y", this.gposition)
       .append("svg:image")
       .attr("xlink:href", "./pattern.png")
-      .attr("width", 500)
-      .attr("height", 500)
+      .attr("width", this.width)
+      .attr("height", this.height)
       .attr("x", 0)
       .attr("y", 0);
 
@@ -70,8 +74,8 @@ class PieContainer extends React.Component {
       .attr("width", 40)
       .attr("height", 40)
       .attr("patternUnits", "userSpaceOnUse")
-      .attr("x", -220)
-      .attr("y", -220)
+      .attr("x", this.gposition + 30)
+      .attr("y", this.gposition + 30)
       .append("svg:image")
       .attr("xlink:href", "./coinpattern.png")
       .attr("width", 40)
