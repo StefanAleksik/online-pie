@@ -1,12 +1,18 @@
 import React from "react";
 import nextId from "react-id-generator";
 
+import { connect } from "react-redux";
+import { addParticipant, addSlice } from "../../redux/actions";
+import { getParticipants, getSlices } from '../../redux/selectors'
+
 class Godfather extends React.Component {
   handleSubmit = (ev) => {
     ev.preventDefault();
-    this.props.addUser({ name: this.input.value, pie: null });
     let id = nextId();
+    //redux stuff
+    this.props.addParticipant({ name: this.input.value, pie: null });
     this.props.addSlice({ value: 1, coin: false, id });
+
     this.input.value = "";
   };
 
@@ -39,7 +45,7 @@ class Godfather extends React.Component {
           </form>
         </div>
         <ul className="list-group list-group-flush">
-          {this.props.userData.map((item, i) => (
+          {this.props.participants.map((item, i) => (
             <li className="list-group-item" key={"participant_" + i}>
               {item.name}
             </li>
@@ -47,7 +53,7 @@ class Godfather extends React.Component {
         </ul>
         <div className="card-body">
           <button
-            disabled={this.props.pieData.length == 0}
+            disabled={this.props.slices.length == 0}
             onClick={this.goToPie}
             type="button"
             className="btn btn-primary btn-lg btn-block"
@@ -60,4 +66,10 @@ class Godfather extends React.Component {
   }
 }
 
-export default Godfather;
+const mapStateToProps = state => {
+  const participants = getParticipants(state);
+  const slices = getSlices(state);
+  return { participants, slices }
+}
+
+export default connect(mapStateToProps, { addParticipant, addSlice })(Godfather);

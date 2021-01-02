@@ -1,6 +1,9 @@
 import React from "react";
 import * as d3 from "d3";
 
+import { connect } from "react-redux";
+import { getSlices } from "../../redux/selectors";
+
 class Pie extends React.Component {
   pieChartRef;
 
@@ -8,10 +11,6 @@ class Pie extends React.Component {
   width = 500;
   height = 500;
   radius = Math.min(this.width, this.height) / 2;
-
-  componentDidUpdate() {
-    this.update(this.props.pieData);
-  }
 
   componentDidMount() {
     this.renderSvg();
@@ -42,8 +41,8 @@ class Pie extends React.Component {
         "translate(" + this.width / 2 + "," + this.height / 2 + ")"
       );
 
-    let defs = this.svg.append("svg:defs");
-    defs
+    let defs_pie = this.svg.append("svg:defs");
+    defs_pie
       .append("svg:pattern")
       .attr("id", "pie_pattern")
       .attr("width", 500)
@@ -58,7 +57,23 @@ class Pie extends React.Component {
       .attr("x", 0)
       .attr("y", 0);
 
-    this.update(this.props.pieData);
+    let defs_coin = this.svg.append("svg:defs");
+    defs_coin
+      .append("svg:pattern")
+      .attr("id", "coin_pattern")
+      .attr("width", 40)
+      .attr("height", 40)
+      .attr("patternUnits", "userSpaceOnUse")
+      .attr("x", -220)
+      .attr("y", -220)
+      .append("svg:image")
+      .attr("xlink:href", "./coinpattern.png")
+      .attr("width", 40)
+      .attr("height", 40)
+      .attr("x", 0)
+      .attr("y", 0);
+
+    this.update(this.props.slices);
   };
 
   update = (data) => {
@@ -73,12 +88,29 @@ class Pie extends React.Component {
     let u = this.svg.selectAll("path").data(data_ready);
 
     u.enter()
+      .append("g")
+      .attr("id", (d) => "g_" + d.data.id)
       .append("path")
-      .on("click",  (d, data) =>{
-        console.log( d, this, data);
-        d3.select("path#" + data.data.id).transition().duration(1000).attr('fill-opacity', 0);
+      .on("click", (d, data) => {
+        d3.select("path#path_" + data.data.id)
+          .transition()
+          .duration(1000)
+          .attr("fill-opacity", 0);
+
+        let coinPosition = d3
+          .arc()
+          .outerRadius(this.radius - 30)
+          .innerRadius(this.radius - 30);
+
+        d3.select("g#g_" + data.data.id)
+          .append("circle")
+          .attr("transform", function (d) {
+            return "translate(" + coinPosition.centroid(d) + ")";
+          })
+          .style("fill", "url(#coin_pattern)")
+          .attr("r", "20");
       })
-      .attr("id", (d) => d.data.id)
+      .attr("id", (d) => "path_" + d.data.id)
       .merge(u)
       .transition()
       .duration(1000)
@@ -86,11 +118,15 @@ class Pie extends React.Component {
       .style("fill", "url(#pie_pattern)")
       .attr("stroke", "#c0c0c0")
       .style("stroke-width", "2px")
-      .attr("stroke-opacity", 0.1)
-      .style("opacity", 1);
+      .attr("stroke-opacity", 0.3);
 
     u.exit().remove();
   };
 }
 
-export default Pie;
+const mapStateToProps = (state) => {
+  const slices = getSlices(state);
+  return { slices };
+};
+
+export default connect(mapStateToProps)(Pie);
