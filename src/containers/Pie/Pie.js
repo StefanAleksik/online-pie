@@ -2,7 +2,10 @@ import React from "react";
 import * as d3 from "d3";
 
 import { connect } from "react-redux";
+import { incrementOrder } from "../../redux/actions";
 import { getSlices } from "../../redux/selectors";
+
+import { Ceremony } from "../../components";
 
 class PieContainer extends React.Component {
   pieChartRef;
@@ -23,7 +26,10 @@ class PieContainer extends React.Component {
           className="card-img-top p-5 woodPattern"
           ref={(el) => (this.pieChartRef = el)}
         ></div>
-        <div className="card-footer bg-transparent">Footer</div>
+        <div className="card-footer bg-transparent">
+          {" "}
+          <Ceremony />{" "}
+        </div>
       </div>
     );
   }
@@ -92,27 +98,35 @@ class PieContainer extends React.Component {
       .attr("id", (d) => "g_" + d.data.id)
       .append("path")
       .on("click", (d, data) => {
-        d3.select("path#path_" + data.data.id)
-          .transition()
-          .duration(1000)
-          .attr("fill-opacity", 0);
+        let path = d3.select("path#path_" + data.data.id);
 
-        if (data.data.coin) {
-          let coinPosition = d3
-            .arc()
-            .outerRadius(this.radius - 30)
-            .innerRadius(this.radius - 30);
+        if (!Number(path.attr("clicked"))) {
+          path
+            .transition()
+            .duration(1000)
+            .attr("fill-opacity", 0)
+            .attr("clicked", 1);
 
-          d3.select("g#g_" + data.data.id)
-            .append("circle")
-            .attr("transform", function (d) {
-              return "translate(" + coinPosition.centroid(d) + ")";
-            })
-            .style("fill", "url(#coin_pattern)")
-            .attr("r", "20");
+          if (data.data.coin) {
+            let coinPosition = d3
+              .arc()
+              .outerRadius(this.radius - 30)
+              .innerRadius(this.radius - 30);
+
+            d3.select("g#g_" + data.data.id)
+              .append("circle")
+              .attr("transform", function (d) {
+                return "translate(" + coinPosition.centroid(d) + ")";
+              })
+              .style("fill", "url(#coin_pattern)")
+              .attr("r", "20");
+          }
+
+          this.props.incrementOrder();
         }
       })
       .attr("id", (d) => "path_" + d.data.id)
+      .attr("clicked", 0)
       .merge(u)
       .transition()
       .duration(1000)
@@ -131,4 +145,4 @@ const mapStateToProps = (state) => {
   return { slices };
 };
 
-export const Pie = connect(mapStateToProps)(PieContainer);
+export const Pie = connect(mapStateToProps, { incrementOrder })(PieContainer);

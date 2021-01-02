@@ -61,7 +61,7 @@ class GodfatherContainer extends React.Component {
             type="button"
             className="btn btn-primary btn-lg btn-block"
           >
-            Врти ме! Врти ме!
+            Подели ја питата!
           </button>
         </div>
       </div>
