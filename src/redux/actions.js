@@ -1,4 +1,4 @@
-import { ADD_PARTICIPANT, ADD_SLICE, ADD_COIN, INCREMENT_ORDER, ADD_WINNER, ADD_MSG, SHOW_CONFETTI } from "./actionTypes";
+import { ADD_PARTICIPANT, ADD_SLICE, ADD_COIN, INCREMENT_ORDER, ADD_WINNER, ADD_MSG, SHOW_CONFETTI, TOGGLE_SEARCH } from "./actionTypes";
 
 // participants
 export const addParticipant = (participant) => ({
@@ -38,4 +38,9 @@ export const addMsg = msg => ({
 
 export const showConfetti = () => ({
   type: SHOW_CONFETTI
+})
+
+export const toggleSearch = bool => ({
+  type: TOGGLE_SEARCH,
+  payload: bool
 })

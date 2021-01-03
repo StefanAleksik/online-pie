@@ -3,7 +3,13 @@ import * as d3 from "d3";
 import { isMobileOnly } from "react-device-detect";
 
 import { connect } from "react-redux";
-import { incrementOrder, addWinner, addMsg, showConfetti } from "../../redux/actions";
+import {
+  incrementOrder,
+  addWinner,
+  addMsg,
+  showConfetti,
+  toggleSearch,
+} from "../../redux/actions";
 import {
   getSlices,
   getPosition,
@@ -135,13 +141,15 @@ class PieContainer extends React.Component {
               pie: data.data.id,
             });
           }
-
+          
           this.props.incrementOrder();
+
           if (
             this.props.winner &&
             this.props.position === this.props.slices.length
           ) {
-            this.props.addMsg("Се бара паричето...");
+            this.props.addMsg("Се бара паричето");
+            this.props.toggleSearch(true);
             setTimeout(() => {
               this.props.addMsg(
                 "Честитки " + this.props.winner.name + " го доби паричето."
@@ -150,6 +158,7 @@ class PieContainer extends React.Component {
                 "fill-opacity",
                 1
               );
+              this.props.toggleSearch(false);
               this.props.showConfetti();
             }, 3000);
           }
@@ -182,5 +191,6 @@ export const Pie = connect(mapStateToProps, {
   incrementOrder,
   addWinner,
   addMsg,
-  showConfetti
+  showConfetti,
+  toggleSearch,
 })(PieContainer);

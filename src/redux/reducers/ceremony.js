@@ -1,6 +1,6 @@
-import { INCREMENT_ORDER, ADD_WINNER, ADD_MSG, SHOW_CONFETTI } from "../actionTypes";
+import { INCREMENT_ORDER, ADD_WINNER, ADD_MSG, SHOW_CONFETTI, TOGGLE_SEARCH } from "../actionTypes";
 
-const initialState = { position: 0, winner: null, msg: "", confetti: false };
+const initialState = { position: 0, winner: null, msg: "", confetti: false, search: false };
 
 const ceremony = (state = initialState, action) => {
   switch (action.type) {
@@ -19,6 +19,10 @@ const ceremony = (state = initialState, action) => {
     }
     case SHOW_CONFETTI: {
       const ceremony = { ...state, confetti: true };
+      return ceremony;
+    }
+    case TOGGLE_SEARCH: {
+      const ceremony = { ...state, search: action.payload };
       return ceremony;
     }
     default:

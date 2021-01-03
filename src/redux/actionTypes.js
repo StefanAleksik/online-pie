@@ -7,6 +7,7 @@ export const ADD_COIN = "ADD_COIN";
 
 // ceremnoy
 export const INCREMENT_ORDER = "INCREMENT_ORDER";
-export const ADD_WINNER = 'ADD_WINNER';
-export const ADD_MSG = 'ADD_MSG';
-export const SHOW_CONFETTI = 'SHOW_CONFETTI'
+export const ADD_WINNER = "ADD_WINNER";
+export const ADD_MSG = "ADD_MSG";
+export const SHOW_CONFETTI = "SHOW_CONFETTI";
+export const TOGGLE_SEARCH = "TOGGLE_LOADING";
