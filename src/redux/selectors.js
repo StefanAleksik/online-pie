@@ -1,5 +1,11 @@
-export const getParticipants = store => store.participants;
+// participants
+export const getParticipants = (store) => store.participants;
 
-export const getSlices = store => store.slices;
+// slices
+export const getSlices = (store) => store.slices;
 
-export const getPosition = store => store.ceremony.position
+// ceremony
+export const getPosition = (store) => store.ceremony.position;
+export const getWinner = (store) => store.ceremony.winner;
+export const getMsg = (store) => store.ceremony.msg;
+export const getConfetti = (store) => store.ceremony.confetti;

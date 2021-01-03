@@ -4,7 +4,7 @@ import { getParticipants, getPosition } from '../../redux/selectors'
 
 const CeremonyComponent = ({participants, position}) => {
     return (
-        <div> {participants[position] ? 'Ајде куме бирај за ' + participants[position].name : 'Толку куме'} </div>
+        <div> {participants[position] ? 'Ајде куме/кумо бирај за ' + participants[position].name : 'Толку куме/кумо'} </div>
     )
 }
 

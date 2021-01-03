@@ -1,22 +1,25 @@
 import React from "react";
 import * as d3 from "d3";
-import { isMobileOnly} from "react-device-detect";
+import { isMobileOnly } from "react-device-detect";
 
 import { connect } from "react-redux";
-import { incrementOrder } from "../../redux/actions";
-import { getSlices } from "../../redux/selectors";
+import { incrementOrder, addWinner, addMsg, showConfetti } from "../../redux/actions";
+import {
+  getSlices,
+  getPosition,
+  getParticipants,
+  getWinner,
+} from "../../redux/selectors";
 
-import { Ceremony } from "../../components";
+import { Ceremony, Winner } from "../../components";
 
 class PieContainer extends React.Component {
   pieChartRef;
 
   svg = null;
-  pieSide = isMobileOnly ? 300 :500;
+  pieSide = isMobileOnly ? 300 : 500;
   radius = this.pieSide / 2;
   gposition = this.radius * -1;
-
-  
 
   componentDidMount() {
     this.renderSvg();
@@ -24,15 +27,18 @@ class PieContainer extends React.Component {
 
   render() {
     return (
-      <div className="card col-sm-8 m-auto p-0">
-        <div
-          className="card-img-top p-5 woodPattern"
-          ref={(el) => (this.pieChartRef = el)}
-        ></div>
-        <div className="card-footer bg-transparent">
-          <Ceremony />
+      <React.Fragment>
+        <Winner />
+        <div className="card col-sm-8 mt-0 mb-auto mx-auto p-0">
+          <div
+            className="card-img-top p-5 woodPattern"
+            ref={(el) => (this.pieChartRef = el)}
+          ></div>
+          <div className="card-footer bg-transparent">
+            <Ceremony />
+          </div>
         </div>
-      </div>
+      </React.Fragment>
     );
   }
 
@@ -120,11 +126,33 @@ class PieContainer extends React.Component {
               .attr("transform", function (d) {
                 return "translate(" + coinPosition.centroid(d) + ")";
               })
+              .attr("fill-opacity", 0)
+              .attr("id", "coin_" + data.data.id)
               .style("fill", "url(#coin_pattern)")
               .attr("r", "20");
+            this.props.addWinner({
+              name: this.props.participants[this.props.position].name,
+              pie: data.data.id,
+            });
           }
 
           this.props.incrementOrder();
+          if (
+            this.props.winner &&
+            this.props.position === this.props.slices.length
+          ) {
+            this.props.addMsg("Се бара паричето...");
+            setTimeout(() => {
+              this.props.addMsg(
+                "Честитки " + this.props.winner.name + " го доби паричето."
+              );
+              d3.select("circle#coin_" + this.props.winner.pie).attr(
+                "fill-opacity",
+                1
+              );
+              this.props.showConfetti();
+            }, 3000);
+          }
         }
       })
       .attr("id", (d) => "path_" + d.data.id)
@@ -144,7 +172,15 @@ class PieContainer extends React.Component {
 
 const mapStateToProps = (state) => {
   const slices = getSlices(state);
-  return { slices };
+  const position = getPosition(state);
+  const participants = getParticipants(state);
+  const winner = getWinner(state);
+  return { slices, position, participants, winner };
 };
 
-export const Pie = connect(mapStateToProps, { incrementOrder })(PieContainer);
+export const Pie = connect(mapStateToProps, {
+  incrementOrder,
+  addWinner,
+  addMsg,
+  showConfetti
+})(PieContainer);
