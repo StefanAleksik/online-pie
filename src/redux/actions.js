@@ -1,4 +1,4 @@
-import { ADD_PARTICIPANT, ADD_SLICE, ADD_COIN, INCREMENT_ORDER, ADD_WINNER, ADD_MSG, SHOW_CONFETTI, TOGGLE_SEARCH } from "./actionTypes";
+import { ADD_PARTICIPANT, ADD_SLICE, ADD_COIN, INCREMENT_ORDER, ADD_WINNER, ADD_MSG, SHOW_CONFETTI, TOGGLE_SEARCH, REMOVE_PARTICIPANT } from "./actionTypes";
 
 // participants
 export const addParticipant = (participant) => ({
@@ -7,6 +7,11 @@ export const addParticipant = (participant) => ({
     ...participant,
   },
 });
+
+export const removeParticipant = (participant) => ({
+  type: REMOVE_PARTICIPANT,
+  payload: participant
+})
 
 // slices
 export const addSlice = slice => ({

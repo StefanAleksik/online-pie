@@ -2,27 +2,35 @@ import React from "react";
 import nextId from "react-id-generator";
 
 import { connect } from "react-redux";
-import { addParticipant, addSlice, addCoin } from "../../redux/actions";
-import { getParticipants, getSlices } from '../../redux/selectors'
+import { addParticipant, addSlice, addCoin, removeParticipant } from "../../redux/actions";
+import { getParticipants } from "../../redux/selectors";
 
-import { getRndInteger } from '../../utils'
+import { getRndInteger } from "../../utils";
 
 class GodfatherContainer extends React.Component {
   handleSubmit = (ev) => {
-    ev.preventDefault();
-    let id = nextId();
+    ev.preventDefault();    
+    const participantId = nextId()
     //redux stuff
-    this.props.addParticipant({ name: this.input.value, pie: null });
-    this.props.addSlice({ value: 1, coin: false, id });
+    this.props.addParticipant({ name: this.input.value, participantId });
     this.input.value = "";
   };
 
   goToPie = (ev) => {
     ev.preventDefault();
-    const coin = getRndInteger(0, this.props.participants.length)
+
+    for(let i = 0; i < this.props.participants.length; i++){
+      const id = nextId();
+      this.props.addSlice({ value: 1, coin: false, id });
+    }
+    const coin = getRndInteger(0, this.props.participants.length);
     this.props.addCoin(coin);
     this.props.history.push("/pie");
   };
+
+  removeParticipant = (item) => {
+    this.props.removeParticipant(item);
+  }
 
   render() {
     return (
@@ -48,15 +56,18 @@ class GodfatherContainer extends React.Component {
           </form>
         </div>
         <ul className="list-group list-group-flush">
-          {this.props.participants.map((item, i) => (
-            <li className="list-group-item" key={"participant_" + i}>
-              {item.name}
+          {this.props.participants.map((item) => (
+            <li className="list-group-item" key={item.participantId}>
+              <span>{item.name}</span>
+              <button onClick={this.removeParticipant.bind(this, item)} className="btn btn-outline-danger m-0 p-1 btn-sm float-right">
+                <span>X</span>
+              </button>              
             </li>
           ))}
         </ul>
         <div className="card-body">
           <button
-            disabled={this.props.slices.length === 0}
+            disabled={this.props.participants.length === 0}
             onClick={this.goToPie}
             type="button"
             className="btn btn-primary btn-lg btn-block"
@@ -69,10 +80,14 @@ class GodfatherContainer extends React.Component {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   const participants = getParticipants(state);
-  const slices = getSlices(state);
-  return { participants, slices }
-}
+  return { participants };
+};
 
-export const Godfather = connect(mapStateToProps, { addParticipant, addSlice, addCoin })(GodfatherContainer);
+export const Godfather = connect(mapStateToProps, {
+  addParticipant,
+  addSlice,
+  addCoin,
+  removeParticipant
+})(GodfatherContainer);
