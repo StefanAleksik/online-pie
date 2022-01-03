@@ -23,7 +23,7 @@ class PieContainer extends React.Component {
   pieChartRef;
 
   svg = null;
-  pieSide = isMobileOnly ? 300 : 500;
+  pieSide = isMobileOnly ? 300 : 650;
   radius = this.pieSide / 2;
   gposition = this.radius * -1;
 
@@ -37,7 +37,7 @@ class PieContainer extends React.Component {
         <Winner />
         <div className="card col-sm-8 mt-0 mb-auto mx-auto p-0">
           <div
-            className="card-img-top p-5 woodPattern"
+            className="card-img-top p-2 woodPattern"
             ref={(el) => (this.pieChartRef = el)}
           ></div>
           <div className="card-footer bg-transparent">

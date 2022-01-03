@@ -1,5 +1,6 @@
 import React from "react";
 import nextId from "react-id-generator";
+import CSVReader from 'react-csv-reader'
 
 import { connect } from "react-redux";
 import { addParticipant, addSlice, addCoin, removeParticipant } from "../../redux/actions";
@@ -15,6 +16,14 @@ class GodfatherContainer extends React.Component {
     this.props.addParticipant({ name: this.input.value, participantId });
     this.input.value = "";
   };
+
+  handleUploadFile = (data, fileInfo, originalFile) => {
+    for(let arr of data){
+      const item = arr.join(' ');
+      const participantId = nextId();
+      this.props.addParticipant({ name: item, participantId });
+    }
+  }
 
   goToPie = (ev) => {
     ev.preventDefault();
@@ -54,6 +63,12 @@ class GodfatherContainer extends React.Component {
               </div>
             </div>
           </form>
+        </div>
+        <div className="card-body">
+        <CSVReader 
+        cssClass="btn btn-secondary" 
+        label="Додади ги твоите пријатели преку CSV file. Секоја ред е нов учесник"
+        onFileLoaded={this.handleUploadFile.bind(this)} />
         </div>
         <ul className="list-group list-group-flush">
           {this.props.participants.map((item) => (
